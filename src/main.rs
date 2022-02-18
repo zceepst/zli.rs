@@ -1,33 +1,56 @@
 use std::env; // command line argument invocation
 use std::fs; // file to string parsing
 use std::process::{Command, Stdio}; // run shell commands
-
 extern crate rpassword;
-use rpassword::read_password; // hide password input
+use rpassword::read_password;
 use std::io::Write; // write to files
 
-pub struct Config {
+mod menu;
+
+#[allow(dead_code)]
+enum Args {
+    Auto,
+    Photon,
+    SD,
+    None,
+}
+
+#[allow(dead_code)]
+struct RunConf {
+    name: String,
+    pass: String,
+    dfu: bool,
+    cmd: Args,
+    spec: String,
+    frmw: String,
+}
+
+struct Config {
     name: String,
     pass: String,
     dfu: bool,
 }
 
-pub struct Args {
-    photon: bool,
-    sd: bool,
-    auto: bool,
-
-}
-
 fn main() {
-    let _config = configure();
+    // let _config = configure();
+    parse_args();
     // test_print(config);
     capture_command_output(String::from("pwd"), String::from("."));
 }
 
-fn _args() {
+fn parse_args() {
     let args: Vec<String> = env::args().collect();
+    match args.len() {
+        // zli invoked, no command
+        1 => {
+            menu::error();
+            menu::help();
+        },
+        // some command(s) passed, unvalidated
+        _ => {
 
+        }
+    }
 }
 
 fn capture_command_output(cmd: String, args: String) {
