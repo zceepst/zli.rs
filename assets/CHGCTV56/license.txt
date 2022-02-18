@@ -1,0 +1,58 @@
+COPYRIGHT
+
+Image files contained on the SD card are Copyright 2017, 2018 zioxi Limited and Armor Associates Limited - no copying or distribution is permitted.
+
+The application software binary contained on the Particle Photon flash memory is Copyright 2017, 2018 Armor Associates Limited - no copying, reverse engineering or distribution is permitted.
+
+CREDITS AND ATTRIBUTIONS
+
+The Particle Photon firmware uses the GNU GCC toolchain for ARM Cortex-M processors, ARM's CMSIS libraries, STM32 standard peripheral libraries, Arduino's implementation of Wiring and Broadcom's WICED WiFi SDK.
+
+Unless stated elsewhere, all Particle firmware software are licensed under a GNU LGPL v3 license.  For more information on the LGPL v3 license please read the file: GNULGPL3.txt
+
+The source code for these are available on github @ https://github.com/particle/firmware/
+
+1.	From Particle webIDE community library/Adafruit_mfGFX library - this is a derivative for the original ported to Particle and providing multi font support by Paul Kourany June 2014,  Copyright (c) 2013 Adafruit Industries.  All rights reserved. The specific conditions Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+- Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+- Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER INCONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+2.	From Particle webIDE community library/Adafruit_ST7735 library -  This is a library for the Adafruit 1.8" SPI display.
+This library works with the 1.8" TFT module with SD card ----> http://www.adafruit.com/products/358 These displays use SPI to communicate, 4 or 5 pins are required to interface (RST is optional)
+Written by Limor Fried/Ladyada for Adafruit Industries.
+MIT license, all text above must be included in any redistribution
+
+3.	From Particle webIDE community library/Fonts library - Multi font GFX library is adapted from Adafruit_GFX library by Paul Kourany v1.0.0, May 2014 Initial Release v1.0.1, June 2014 Font Compilation update
+
+4.	From Particle webIDE community library/SDFAT library - this and other SD file management and IO libraries contain this or similar:
+Arduino SdFat Library
+Copyright (C) 2012 by William Greiman 
+* This file is part of the Arduino SdFat Library
+*
+* This Library is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This Library is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with the Arduino SdFat Library.  If not, see
+* <http://www.gnu.org/licenses/>.
+
+5.	From Arduino community library/PS2keyboard - these programs (.cpp and .h) have been modified and ported to Particle Photon/Core and contain this text:
+PS2Keyboard.h - PS2Keyboard library
+Copyright (c) 2007 Free Software Foundation.  All right reserved.
+Written by Christian Weichel <info@32leaves.net>
+** Mostly rewritten Paul Stoffregen <paul@pjrc.com>, June 2010
+** Modified for use with Arduino 13 by L. Abraham Smith, <n3bah@microcompdesign.com> * 
+** Modified for easy interrupt pin assignment on method begin(datapin,irq_pin). Cuningan <cuninganreset@gmail.com> **
+** Modified for use on Particle Core wjsteen@talktalk.net July 2015 based on PS2Communication library
+
+This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option) any later version.
+This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
