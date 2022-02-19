@@ -31,26 +31,31 @@ Options:
     --powerhub      Powerhub charging product
 
 Examples:
-    zli -v --trolley 'CHRGT-TB-40-K-OV'     Configures photon and SD card
-                                            for trolley with verbose logs
-    zli --powerhub 'HUB4D-L100-2M2U-UK'     Configure and provision a
-                                            powerhub photon and SD card");
+    zli auto -v --trolley CHRGT-TB-40-K-OV	Configures photon and SD for a trolley with verbose logs
+    zli auto --powerhub HUB4D-L100-2M2U-UK	Configure and provision a powerhub photon and SD card");
 }
 
 // photon command help menu
 pub fn photon() {
     println!("Configure photon device
-Usage: zli photon [options]
+Usage: zli photon [options] [file]
 
 Global Options:
     -v, --verbose   Increases how much logging to display
     -q, --quiet     Decreases how much logging to display
 
-Options:
-    --
-");
+Example:
+	zli photon zioxi-powerhub4-v526.bin		Flash powerhub binary file to photon target");
 }
 
 pub fn sd() {
-	println!("Wrong!");
+	println!("Provision SD card
+Usage: zli sd [options] [product code]
+
+Global Options:
+    -v, --verbose   Increases how much logging to display
+    -q, --quiet     Decreases how much logging to display
+
+Example:
+	zli sd HUB4D-L100-2M2U-UK				Generate config files then provisions files to SD card");
 }

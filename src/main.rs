@@ -1,9 +1,12 @@
 use std::env; // command line argument invocation
 use std::fs; // file to string parsing
 use std::process::{Command, Stdio}; // run shell commands
+use std::io::Write; // write to files
+
+extern crate clap;
+use clap::{Arg, App};
 extern crate rpassword;
 use rpassword::read_password;
-use std::io::Write; // write to files
 
 mod menu;
 
@@ -33,26 +36,61 @@ struct Config {
 
 fn main() {
     // let _config = configure();
-    parse_args();
+    // parse_args();
+    // menu::auto();
     // test_print(config);
-    capture_command_output(String::from("pwd"), String::from("."));
-}
+    // capture_command_output(String::from("pwd"), String::from("."));
+        let matches = App::new("My Test Program")
+        .version("0.1.0")
+        .author("Hackerman Jones <hckrmnjones@hack.gov>")
+        .about("Teaches argument parsing")
+        .arg(Arg::new("file")
+                 .short('f')
+                 .long("file")
+                 .takes_value(true)
+                 .help("A cool file"))
+        .arg(Arg::new("num")
+                 .short('n')
+                 .long("number")
+                 .takes_value(true)
+                 .help("Five less than your favorite number"))
+        .get_matches();
 
-fn parse_args() {
-    let args: Vec<String> = env::args().collect();
-    match args.len() {
-        // zli invoked, no command
-        1 => {
-            menu::error();
-            menu::help();
-        },
-        // some command(s) passed, unvalidated
-        _ => {
+    let myfile = matches.value_of("file").unwrap_or("input.txt");
+    println!("The file passed is: {}", myfile);
 
+    let num_str = matches.value_of("num");
+    match num_str {
+        None => println!("No idea what your favorite number is."),
+        Some(s) => {
+            match s.parse::<i32>() {
+                Ok(n) => println!("Your favorite number must be {}.", n + 5),
+                Err(_) => println!("That's not a number! {}", s),
+            }
         }
     }
 }
 
+fn parse_args() {
+    let args: Vec<String> = env::args().collect();
+    // println!("{}", args.len())
+    if args.len() == 1 || args.len() > 5 {
+        // arguments out of bound
+        menu::error();
+        menu::help();
+    } else {
+        // args in bound, proceed to decompose
+        let arg1 = &args[1];
+        match arg1.as_str() {
+            "auto" => {println!("auto");},
+            "photon" => {println!("photon");},
+            "sd" => {println!("sd");},
+            _ => {menu::error();},
+        }
+    }
+}
+
+#[allow(dead_code)]
 fn capture_command_output(cmd: String, args: String) {
     let output = Command::new(cmd)
         .arg(args)
