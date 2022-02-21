@@ -1,11 +1,7 @@
 # zli
 
-Rust re-implementation of zli [previously implemented](~/Documents/work/zioxi-tools/zli) in Julia.
-This first attempt was bit slow due do overheads inherent to the JIT runtime.
+Rust re-implantation of zli previously written in Julia, which in hindsight wasn't the most appropriate choice.
+The hardware this tool is deployed to has very limited memory resources and performing i/o operations with Julia inccurs many overheads which reduces the performance down to annoyingly slow speeds.
 
-The hardware we are deploying to here is __incredibly__ slow -- a Raspberry Pi would be an improvement (this is not a joke).
-So, how do we fix this?
+This rewrite should offer substantial performance improvements, especially i/o speeds and memory usage.
 
-Well, having been bombarded with post after post about the *blazing fast* performance of Rust on the orange site over and over again, I've decided to give it a go.
-
-This will most likely all be poorly optimized code.
