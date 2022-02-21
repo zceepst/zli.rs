@@ -3,6 +3,7 @@ use std::fs; // file to string parsing
 use std::process; // run shell commands
 use std::path; // directory tree utils
 use std::io::Write; // write to files
+use std::env;
 
 extern crate clap;
 extern crate rpassword;
@@ -20,7 +21,8 @@ enum Cmd {
 
 struct Args {
     cmd: Cmd,
-    arg: String,
+    arg1: String,
+    arg2: String,
 }
 
 #[allow(dead_code)]
@@ -40,13 +42,78 @@ struct Config {
 }
 
 fn main() {
-    let args: Args = arg_parse(); // user arguments parsed
-    println!("Output:\n{}", args.arg);
+    particle_usb("dfu");
+    // let out = process::Command::new("particle")
+    //     .arg("usb")
+    //     .arg("dfu")
+    //     .arg("-v")
+    //     .stdout(process::Stdio::piped())
+    //     .output()
+    //     .unwrap();
+    // let stdout = String::from_utf8(out.stdout).unwrap();
+    // println!("Command output:\n{}", stdout);
+
+    // let args: Args = arg_parse(); // user arguments parsed
+    // println!("Output:\n{:?}\n{:?}", args.arg1, args.arg2);
+    // let out = process::Command::new("pwd")
+    //     .arg(".")
+    //     .stdout(process::Stdio::piped())
+    //     .output()
+    //     .unwrap();
+    // let stdout = String::from_utf8(out.stdout).unwrap();
+    // println!("Command output:\n{}", stdout);
+
+    // particle_device_state("reset");
+    // particle_device_state("dfu");
+    // flash_device_os("--usb", "photon-system-part1","2.1.0");
+    // flash_device_os("--usb", "photon-system-part2","2.1.0");
+    // flash_device_os("--usb", "photon-tinker","2.1.0");
+    // particle_device_state("reset");
+    // particle_device_state("start-listening --yes");
     // let _config = configure();
     // parse_args();
     // menu::auto();
     // test_print(config);
-    // capture_command_output(String::from("pwd"), String::from("."));
+    // capture_command_output(String::from("pwd"), String::
+}
+
+fn particle_usb(state: &str) {
+    let out = process::Command::new("particle")
+        .arg("usb")
+        .arg(state)
+        .stdout(process::Stdio::piped())
+        .output()
+        .unwrap();
+}
+
+fn particle_device_state(state: &str) {
+    let mut command: String = String::from("particle usb ");
+    command.push_str(state);
+    process::Command::new(command);
+}
+
+// builds: particle flash <flag> bin/bin/photon-os-<version>/photon-<part>@<version>.bin
+fn build_flash_command(flag: &str, part: &str, version: &str) -> String {
+    let mut command: String = String::from("particle flash ");
+    command.push_str(flag);
+    command.push(' ');
+    command.push_str("./bin/bin/photon-os-");
+    command.push_str(version);
+    command.push('/');
+    command.push_str(part);
+    command.push('@');
+    command.push_str(version);
+    command.push_str(".bin");
+    return command;
+}
+
+fn flash_device_os(flag: &str, part: &str, version: &str) {
+    let cmd = build_flash_command(flag, part, version);
+    let output = process::Command::new(cmd)
+        .spawn()
+        .unwrap();
+    // let stdout = String::from_utf8(output.stdout).unwrap();
+    // println!("Command output:\n{}", stdout);
 }
 
 fn arg_parse() -> Args {
@@ -84,12 +151,17 @@ fn arg_parse() -> Args {
 
     match matches.subcommand() {
         Some(("auto", sub_matches)) => {
-            let argy = sub_matches.value_of("PRODUCT_CODE").expect("required");
+            let code = sub_matches.value_of("PRODUCT_CODE").expect("required");
+            let serial = sub_matches.value_of("SERIAL_ID").expect("required");
             println!(
-                "Automatic configuration of product: {}",
-                &argy
+                "Automatic configuration of product:\n{:?}\n{:?}",
+                &code, &serial
             );
-            return Args{ cmd: Cmd::Auto, arg: String::from(argy) };
+            return Args{
+                cmd: Cmd::Auto,
+                arg1: String::from(code),
+                arg2: String::from(serial)
+            };
         }
         Some(("photon", sub_matches)) => {
             let argy = sub_matches.value_of("FIRMWARE").expect("required");
@@ -97,15 +169,20 @@ fn arg_parse() -> Args {
                 "Photon firmware and device-OS flash version: {}",
                 &argy
             );
-            return Args{ cmd: Cmd::Photon, arg: String::from(argy) };
+            return Args{ cmd: Cmd::Photon, arg1: String::from(argy), arg2: String::from("None") };
         }
         Some(("sd", sub_matches)) => {
-            let argy = sub_matches.value_of("PRODUCT_CODE").expect("required");
+            let code = sub_matches.value_of("PRODUCT_CODE").expect("required");
+            let serial = sub_matches.value_of("SERIAL_ID").expect("required");
             println!(
-                "Config generation and sd card provisioning for: {}",
-                &argy
+                "Config generation and sd card provisioning for:\n{:?}\n{:?}",
+                &code, &serial
             );
-            return Args{ cmd: Cmd::SD, arg: String::from(argy) };
+            return Args{
+                cmd: Cmd::Auto,
+                arg1: String::from(code),
+                arg2: String::from(serial)
+            };
         }
         Some((ext, sub_matches)) => {
             let args = sub_matches
@@ -113,7 +190,11 @@ fn arg_parse() -> Args {
                 .unwrap_or_default()
                 .collect::<Vec<_>>();
             println!("Calling out to {:?} with {:?}", ext, args);
-            return Args{ cmd: Cmd::None, arg: String::from("None") };
+            return Args{
+                cmd: Cmd::None,
+                arg1: String::from("None"),
+                arg2: String::from("None")
+            };
         }
         _ => unreachable!(), // If all subcommands are defined above, anything else is unreachabe!()
     }
