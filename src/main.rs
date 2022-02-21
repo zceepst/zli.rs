@@ -1,21 +1,26 @@
-use std::env; // command line argument invocation
+// use std::env; // command line argument invocation
 use std::fs; // file to string parsing
-use std::process::{Command, Stdio}; // run shell commands
+use std::process; // run shell commands
+use std::path; // directory tree utils
 use std::io::Write; // write to files
 
 extern crate clap;
-use clap::{Arg, App};
 extern crate rpassword;
 use rpassword::read_password;
 
-mod menu;
+mod menu; // import help menus (depreciated)
 
 #[allow(dead_code)]
-enum Args {
+enum Cmd {
     Auto,
     Photon,
     SD,
     None,
+}
+
+struct Args {
+    cmd: Cmd,
+    arg: String,
 }
 
 #[allow(dead_code)]
@@ -23,7 +28,7 @@ struct RunConf {
     name: String,
     pass: String,
     dfu: bool,
-    cmd: Args,
+    cmd: Cmd,
     spec: String,
     frmw: String,
 }
@@ -35,66 +40,90 @@ struct Config {
 }
 
 fn main() {
+    let args: Args = arg_parse(); // user arguments parsed
+    println!("Output:\n{}", args.arg);
     // let _config = configure();
     // parse_args();
     // menu::auto();
     // test_print(config);
     // capture_command_output(String::from("pwd"), String::from("."));
-        let matches = App::new("My Test Program")
-        .version("0.1.0")
-        .author("Hackerman Jones <hckrmnjones@hack.gov>")
-        .about("Teaches argument parsing")
-        .arg(Arg::new("file")
-                 .short('f')
-                 .long("file")
-                 .takes_value(true)
-                 .help("A cool file"))
-        .arg(Arg::new("num")
-                 .short('n')
-                 .long("number")
-                 .takes_value(true)
-                 .help("Five less than your favorite number"))
-        .get_matches();
-
-    let myfile = matches.value_of("file").unwrap_or("input.txt");
-    println!("The file passed is: {}", myfile);
-
-    let num_str = matches.value_of("num");
-    match num_str {
-        None => println!("No idea what your favorite number is."),
-        Some(s) => {
-            match s.parse::<i32>() {
-                Ok(n) => println!("Your favorite number must be {}.", n + 5),
-                Err(_) => println!("That's not a number! {}", s),
-            }
-        }
-    }
 }
 
-fn parse_args() {
-    let args: Vec<String> = env::args().collect();
-    // println!("{}", args.len())
-    if args.len() == 1 || args.len() > 5 {
-        // arguments out of bound
-        menu::error();
-        menu::help();
-    } else {
-        // args in bound, proceed to decompose
-        let arg1 = &args[1];
-        match arg1.as_str() {
-            "auto" => {println!("auto");},
-            "photon" => {println!("photon");},
-            "sd" => {println!("sd");},
-            _ => {menu::error();},
+fn arg_parse() -> Args {
+    let matches = clap::Command::new("zli")
+        .about("Production automation tool")
+        .subcommand_required(true)
+        .arg_required_else_help(true)
+        .allow_external_subcommands(true)
+        .allow_invalid_utf8_for_external_subcommands(true)
+        .subcommand(
+            clap::Command::new("auto")
+                .about("One-shot product setup, photon & sd card")
+                .args(&[
+                    clap::arg!(<PRODUCT_CODE> "Product code"),
+                    clap::arg!([SERIAL_ID] "Device serial ID e.g. zcts100054")
+                ])
+                .arg_required_else_help(true),
+        )
+        .subcommand(
+            clap::Command::new("photon")
+                .about("Photon firmware and device-OS flash")
+                .arg(clap::arg!(<FIRMWARE> "Firmware binary"))
+                .arg_required_else_help(true),
+        )
+        .subcommand(
+            clap::Command::new("sd")
+                .about("Generate config and providion sd card")
+                .args(&[
+                    clap::arg!(<PRODUCT_CODE> "Product code"),
+                    clap::arg!([SERIAL_ID] "Device serial ID e.g. zcts100054")
+                ])
+                .arg_required_else_help(true),
+        )
+        .get_matches();
+
+    match matches.subcommand() {
+        Some(("auto", sub_matches)) => {
+            let argy = sub_matches.value_of("PRODUCT_CODE").expect("required");
+            println!(
+                "Automatic configuration of product: {}",
+                &argy
+            );
+            return Args{ cmd: Cmd::Auto, arg: String::from(argy) };
         }
+        Some(("photon", sub_matches)) => {
+            let argy = sub_matches.value_of("FIRMWARE").expect("required");
+            println!(
+                "Photon firmware and device-OS flash version: {}",
+                &argy
+            );
+            return Args{ cmd: Cmd::Photon, arg: String::from(argy) };
+        }
+        Some(("sd", sub_matches)) => {
+            let argy = sub_matches.value_of("PRODUCT_CODE").expect("required");
+            println!(
+                "Config generation and sd card provisioning for: {}",
+                &argy
+            );
+            return Args{ cmd: Cmd::SD, arg: String::from(argy) };
+        }
+        Some((ext, sub_matches)) => {
+            let args = sub_matches
+                .values_of_os("")
+                .unwrap_or_default()
+                .collect::<Vec<_>>();
+            println!("Calling out to {:?} with {:?}", ext, args);
+            return Args{ cmd: Cmd::None, arg: String::from("None") };
+        }
+        _ => unreachable!(), // If all subcommands are defined above, anything else is unreachabe!()
     }
 }
 
 #[allow(dead_code)]
 fn capture_command_output(cmd: String, args: String) {
-    let output = Command::new(cmd)
+    let output = process::Command::new(cmd)
         .arg(args)
-        .stdout(Stdio::piped())
+        .stdout(process::Stdio::piped())
         .output()
         .unwrap();
     let stdout = String::from_utf8(output.stdout).unwrap();
