@@ -1,3 +1,4 @@
+use std::fmt::Result;
 // use std::env; // command line argument invocation
 use std::fs; // file to string parsing
 use std::process; // run shell commands
@@ -5,8 +6,12 @@ use std::path; // directory tree utils
 use std::io::Write; // write to files
 use std::env;
 
-extern crate clap;
-extern crate rpassword;
+use async_process;
+
+/* `extern crate <name>` no longer required 99% of the time, replaced by `use`  */
+// extern crate clap;
+// extern crate rpassword;
+use clap;
 use rpassword::read_password;
 
 #[allow(dead_code)]
@@ -40,7 +45,20 @@ struct Config {
 }
 
 fn main() {
-    particle_usb("dfu");
+    // async command process test:
+    // particle_usb("dfu");
+    // let output = if cfg!(target_os = "linux") {
+    //     async_process::Command::new("particle")
+    //         .args(&[
+    //             "flash",
+    //             "--usb",
+    //             "./bin/bin/photon-os-2.2.0/photon-system-part1@2.2.0.bin"
+    //         ])
+    //         .output()
+    //         .await;
+    // }
+    // let args: Args = arg_parse(); // user arguments parsed
+    // particle_usb("dfu");
     // let out = process::Command::new("particle")
     //     .arg("usb")
     //     .arg("dfu")
@@ -51,7 +69,6 @@ fn main() {
     // let stdout = String::from_utf8(out.stdout).unwrap();
     // println!("Command output:\n{}", stdout);
 
-    // let args: Args = arg_parse(); // user arguments parsed
     // println!("Output:\n{:?}\n{:?}", args.arg1, args.arg2);
     // let out = process::Command::new("pwd")
     //     .arg(".")
