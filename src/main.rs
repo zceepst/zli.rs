@@ -9,8 +9,6 @@ extern crate clap;
 extern crate rpassword;
 use rpassword::read_password;
 
-mod menu; // import help menus (depreciated)
-
 #[allow(dead_code)]
 enum Cmd {
     Auto,
