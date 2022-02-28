@@ -12,6 +12,8 @@ This rewrite should offer substantial performance improvements, especially i/o s
 - [x] particle command run
 - [x] photon device-os flash commands
 - [x] photon firmware flash commands
+- [ ] product code to firmware mapping
+- [ ] general product code database/entry proc.
 - [ ] sd card product config generator
 - [ ] sd card config provisioning
 - [ ] sd card image assets provisioning
