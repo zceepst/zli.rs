@@ -63,7 +63,7 @@ fn flash_part(part: &str, interface: Vec<&str>) {
 pub fn flash_device_os(version: &str) {
     let paths: Vec<String> = device_os_paths(version);
 
-    usb_state("dfu");
+    usb_state("dfu"); // device dfu mode
     println!("\n---0\n");
 
     flash_part(&paths[0][..], vec!["--usb"]);     // system part 1
@@ -75,22 +75,12 @@ pub fn flash_device_os(version: &str) {
     flash_part(&paths[2][..], vec!["--usb"]);     // tinker
     println!("\n---3\n");
 
-    let one_sec = time::Duration::from_millis(1000);
-    let five_sec = time::Duration::from_millis(5000);
+    let pause = time::Duration::from_millis(2000); // 2 seconds pause
+    thread::sleep(pause); // necessary pre-serial state pause
 
-    thread::sleep(five_sec);
-
-    usb_state("reset");
+    usb_state("start-listening"); // device serial mode
     println!("\n---4\n");
 
-    thread::sleep(one_sec);
-
-    usb_state("start-listening");
-    println!("\n---5\n");
-
-    thread::sleep(one_sec);
-
     flash_part(&paths[3][..], vec!["--serial", "--yes"]);  // bootloader
-    println!("\n---6\n");
-
+    println!("\n---5\n");
 }

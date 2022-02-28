@@ -12,15 +12,15 @@ struct RunConf {
 }
 
 fn main() {
+    let program: argparse::Args = argparse::arg_parse(); // user arguments parsed
+    let system: config::Config = config::configure();
+    let config: RunConf = RunConf{ system, program };
+    println!("Run Config Structure:\n{:?}", config);
+
+    let home = config::username();
+    println!("Home dir ls result:\n{:?}", home);
+
     particle::flash_device_os("2.2.0");
-
-    // let program: argparse::Args = argparse::arg_parse(); // user arguments parsed
-    // let system: config::Config = config::configure();
-    // let config: RunConf = RunConf{ system, program };
-    // println!("Run Config Structure:\n{:?}", config);
-
-    // let home = config::username();
-    // println!("Home dir ls result:\n{:?}", home);
 }
 
 #[allow(dead_code)]

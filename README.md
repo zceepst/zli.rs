@@ -5,6 +5,18 @@ The hardware this tool is deployed to has very limited memory resources and perf
 
 This rewrite should offer substantial performance improvements, especially i/o speeds and memory usage.
 
+## To Do List
+
+- [x] argument parsing and basic command behaviours
+- [x] runtime config generation
+- [x] particle command run
+- [x] photon device-os flash commands
+- [x] photon firmware flash commands
+- [ ] sd card product config generator
+- [ ] sd card config provisioning
+- [ ] sd card image assets provisioning
+- [ ] auto mode run-all
+
 ## Reverse-engineering OS flash memory
 
 Particle devices have their [*Device OS*](https://docs.particle.io/reference/device-os/firmware/) loaded in flash memory by `dfu-util`.
@@ -26,7 +38,7 @@ Host side, the interface is represented by a mount point at `/sys/class/tty/ttyA
 This directory manages the `uevent`, `power` and `driver` subsystem for handling the interface between this USB device and the system.
 
 When our Photon is connected, we can verify that this is the correct interface location by checking the file named: `interface` and seeing that the interface name is in fact: `Photon Serial`.
-We can also obtain the serial interface 
+We can also obtain the serial interface
 
 ---
 
