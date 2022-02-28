@@ -6,22 +6,28 @@ mod particle;
 
 #[allow(dead_code)]
 #[derive(Debug)]
-struct RunConf {
+struct RunConfig {
     system: config::Config,
     program: argparse::Args,
 }
 
 fn main() {
-    let program: argparse::Args = argparse::arg_parse(); // user arguments parsed
+    let program: argparse::Args = argparse::arg_parse();
     let system: config::Config = config::configure();
-    let config: RunConf = RunConf{ system, program };
-    println!("Run Config Structure:\n{:?}", config);
+    let config: RunConfig = RunConfig{ system, program }; // runtime config
+    // println!("Run Config Structure:\n{:?}", config);
 
-    let home = config::username();
-    println!("Home dir ls result:\n{:?}", home);
+    match config.program.cmd {
+        argparse::Cmd::Auto => {
+           let _placeholder = config.program.arg1;
+        },
+        argparse::Cmd::Photon => {},
+        argparse::Cmd::SD => {},
+        argparse::Cmd::None => {},
+    }
 
-    particle::flash_device_os("2.2.0");
 }
+// particle::flash_device_os("2.2.0");
 
 #[allow(dead_code)]
 fn shell_command(cmd: String, args: String) -> String {

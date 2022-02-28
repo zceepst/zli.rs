@@ -14,20 +14,11 @@ pub struct Config {
     dfu: bool,
 }
 
-pub fn configure() -> Config {
 // read in config parts and assemble config data to modify program behaviour later
+pub fn configure() -> Config {
     let password = password_prompt();
     let dfuperms = dfu_perms();
-    // reads /home dir to parse username to String
-    // let output = process::Command::new("ls")
-    //     .arg("/home/")
-    //     .stdout(process::Stdio::piped())
-    //     .output()
-    //     .unwrap();
-    // let string_out = String::from_utf8(output.stdout).unwrap();
-    // let split = string_out.split('\\').collect();
-    // let username: &str = String::from(split[0]);
-    let username = String::from("pb");
+    let username = username();
     return Config { name: username, pass: password, dfu: dfuperms };
 }
 
@@ -46,18 +37,6 @@ pub fn dfu_perms() -> bool {
     let val: i32 = string.parse().unwrap();
     return if val == 0 { false } else { true };
 }
-
-// pub fn homepath() -> String {
-// 	let output = process::Command::new("ls")
-// 		.arg("/home")
-// 		.stdout(process::Stdio::piped())
-//          .output()
-//          .unwrap();
-// 	let utf_vec: Vec<u8> = output.stdout;
-// 	let n = utf_vec.len() - 1; // -2 = removing '\n' from end, -1 for 0-index mode
-// 	let chopped = utf_vec[..n].to_vec();
-// 	return String::from_utf8(chopped).unwrap();
-// }
 
 // get system username (unix) from home directory
 pub fn username() -> String {

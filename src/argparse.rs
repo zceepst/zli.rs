@@ -10,14 +10,14 @@ pub enum Cmd {
 
 #[derive(Debug)]
 pub struct Args {
-    cmd: Cmd,
-    arg1: String,
-    arg2: String,
+    pub cmd: Cmd,
+    pub arg1: String,
+    pub arg2: String,
 }
 
+// Argument parser
+// Parses command line arguments using `clap` crate.
 pub fn arg_parse() -> Args {
-	// Argument parser.
-	// Parses command line arguments using `clap` crate.
     let matches = clap::Command::new("zli")
         .about("Production automation tool")
         .subcommand_required(true)
@@ -70,7 +70,11 @@ pub fn arg_parse() -> Args {
                 "Photon firmware and device-OS flash version: {}",
                 &argy
             );
-            return Args{ cmd: Cmd::Photon, arg1: String::from(argy), arg2: String::from("None") };
+            return Args{
+                cmd: Cmd::Photon,
+                arg1: String::from(argy),
+                arg2: String::from("None")
+            };
         }
         Some(("sd", sub_matches)) => {
             let code = sub_matches.value_of("PRODUCT_CODE").expect("required");
@@ -80,7 +84,7 @@ pub fn arg_parse() -> Args {
                 &code, &serial
             );
             return Args{
-                cmd: Cmd::Auto,
+                cmd: Cmd::SD,
                 arg1: String::from(code),
                 arg2: String::from(serial)
             };
@@ -97,6 +101,6 @@ pub fn arg_parse() -> Args {
                 arg2: String::from("None")
             };
         }
-        _ => unreachable!(), // If all subcommands are defined above, anything else is unreachabe!()
+        _ => unreachable!(),
     }
 }
