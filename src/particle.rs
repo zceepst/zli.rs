@@ -4,6 +4,11 @@ use std::process;
 use std::thread;
 use std::time;
 
+// maps product code to default (latest) firmware version
+pub fn default_firmware(code: String) -> String {
+    return String::from("2.2.0");
+}
+
 fn usb_state(state: &str) {
     let out = process::Command::new("particle")
         .arg("usb")
