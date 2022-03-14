@@ -1,9 +1,9 @@
-use std::process; // run shell commands
+use std::{clone, process}; // run shell commands
 use serde_json;
 mod config;
 mod argparse;
 mod particle;
-mod database;
+mod products;
 use rusqlite::{
     params,
     Connection,
@@ -25,8 +25,15 @@ struct Person {
 }
 
 fn main() {
-    let data: serde_json::Value = database::products().unwrap();
-    println!("{:?}", data["tcodes"][0]);
+    // String::from("HUB4T-L150-4M-EU")
+    products::main_config_generator(
+        String::from("CHRGC-LS-30-K-OV")
+    );
+    // let data: serde_json::Value = products::products().unwrap();
+    // println!("{:#?}", data);
+
+    // let tcodes: Vec<String> = products::unpack_json(data, "pcodes");
+    // println!("{:#?}", tcodes);
 }
 
 // fn main() {
@@ -43,6 +50,19 @@ fn main() {
 //         argparse::Cmd::SD => {},
 //         argparse::Cmd::None => {},
 //     }
+// }
+
+// fn isin_test(testvec: Vec<String>, item: &str) {
+//     let testvec = vec![
+//         String::from("no"),
+//         String::from("no"),
+//         String::from("no"),
+//         String::from("no"),
+//         String::from("no"),
+//     ];
+//     // let test: bool = products::isin(String::from("yes"), testvec);
+//     let test: bool = testvec.iter().any(|e| e == &String::from("no"));
+//     println!("{:?}", test);
 // }
 
 #[allow(dead_code)]

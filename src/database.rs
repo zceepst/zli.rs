@@ -2,16 +2,7 @@
 // run SQL script with sqlite3 and create databse
 // file with 2 tables: charging and powerhubs
 
-// use json;
-use serde_json;
-// use serde::Deserialize;
-
-use std::{
-	env,
-	fs,
-	path,
-	borrow::Cow
-};
+use std::borrow::Cow;
 
 // #[derive(Deserialize, Debug)]
 struct TrolleyCode {
@@ -65,23 +56,4 @@ pub struct Products {
 	pcodes:		Vec<Cow<'static, str>>,
 	trolleys: Vec<TrolleyCode>,
 	tcodes: Vec<Cow<'static, str>>,
-}
-
-// pub fn parse_products() {
-// 	let raw = fs::read_to_string("products.json")
-// 		.expect("Something went wrong reading 'products.json'");
-// 	let parsed = json::parse(&raw[..]); // parse complete slice (&str) of String
-// 	println!("{:?}", parsed);
-// }
-
-pub fn products() -> Option<serde_json::Value> {
-	let raw: String = fs::read_to_string("products.json")
-		.expect("Something went wrong reading 'products.json'");
-	let products: serde_json::Value = serde_json::from_str(&raw[..])
-		.unwrap();
-	return Some(products);
-}
-
-pub fn create_database() -> u8 {
-	return 0;
 }
